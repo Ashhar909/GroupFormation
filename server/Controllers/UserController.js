@@ -84,7 +84,7 @@ exports.createGroup = async (req,res) => {
 
         let user = await User.findOne({_id:userID});
         if(user.group){
-            res.status(400).json({err:"Please leave the previous group"})
+            return res.status(400).json({err:"Please leave the previous group"})
         }
 
         // console.log(user, secureGrpPassword);

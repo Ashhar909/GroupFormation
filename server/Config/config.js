@@ -1,8 +1,7 @@
-const Uri = "mongodb+srv://Ashhar:test123@formgroups.c4dq7hn.mongodb.net/?retryWrites=true&w=majority"
 const mongoose = require('mongoose');
 
 const ConnectDb = () => {
-    mongoose.connect(Uri,()=>{
+    mongoose.connect(process.env.MONGO_URL,()=>{
         console.log("Db Connected");
     });
 }
