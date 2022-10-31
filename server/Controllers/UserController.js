@@ -39,13 +39,13 @@ exports.login = async(req,res)=>{
         let DbPassword = user.password
 
         if(!user){
-            res.status(400).send({err:"use valid email"})
+            return res.status(400).send({err:"use valid email"})
         }
 
         let comparePass = await bcrypt.compare(password,DbPassword);
         // console.log(comparePass);
         if(!comparePass){
-            res.status(400).send({err:"Incorrect Password"});
+            return res.status(400).send({err:"Incorrect Password"});
         }
         else{
             const uniqueData = {
@@ -151,14 +151,20 @@ exports.joinGroup = async (req, res) => {
         );
 
         if(!userLead){
-            res.status(400).send({err:"invalid group creds"});
+            return res.status(400).send({err:"invalid group creds"});
+        }
+
+        // * chk if already a member of any other group
+        let user = await User.findOne({_id:userID});
+        if(user.group){
+            return res.status(400).json({err:"Please leave the previous group"})
         }
         
         let DbPassword = userLead.groupPass;
         let comparePass = await bcrypt.compare(password,DbPassword);
 
         if(!comparePass){
-            res.status(400).send({err:"Incorrect Password"});
+            return res.status(400).send({err:"Incorrect Password"});
         }
 
         User.updateOne({_id:userID},

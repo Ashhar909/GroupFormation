@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 8080;
 ConnectDb()
 
 app.listen(PORT,()=>{
-    console.log("Listening at port 3003")
+    console.log(`Listening at port ${PORT}`)
 })
   
 // send response in json
