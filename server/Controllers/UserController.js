@@ -6,32 +6,56 @@ const jwt = require('jsonwebtoken')
 const {Secret} = require('../Middleware/FetchUser')
 
 
-exports.createUser = async(req,res) => {
+exports.createUser = async (req,res) => {
+    let obj = {
+        token:null,
+        error:null
+    }
+
     // create encrypted password
-    const salt = await bcrypt.genSalt(10);
-    const securePassword = await bcrypt.hash(req.body.password,salt);
+    try {
 
-    const user = new User({
-        name:req.body.name,
-        email:req.body.email,
-        password:securePassword,
-    })
+        const {email, name, password} = req.body
+        const exists = await User.findOne({email})
 
-    user.save()
-    .then(()=>{
-        const uniqueData = {
-            id:user._id
+        if(exists){
+            obj.error = "User already exists";
+            return res.status(400).json(obj);
         }
-        const token = jwt.sign(uniqueData,Secret);
-        console.log("Saved");
-        res.json(token);
-    })
-    .catch((err)=>{
-        res.send(err.msg);
-    })
+        
+        const salt = await bcrypt.genSalt(10);
+        const securePassword = await bcrypt.hash(password,salt);
+        const user = new User({
+            name,
+            email,
+            password:securePassword
+        })
+
+        user.save()
+        .then(()=>{
+            const uniqueData = {
+                id:user._id
+            }
+            const token = jwt.sign(uniqueData,Secret);
+            console.log("Saved");
+            obj.token = token;
+            res.json(obj);
+        })
+        .catch((err)=>{
+            obj.error = err.message
+            res.json(obj)
+        })
+    } catch (error) {
+        obj.error = "Internal server error"
+        res.json(obj)
+    }
 }
 
 exports.login = async(req,res)=>{
+    let obj = {
+        token:null,
+        error:null
+    }
 
     try {
         const {email, password} = req.body;
@@ -39,13 +63,15 @@ exports.login = async(req,res)=>{
         let DbPassword = user.password
 
         if(!user){
-            return res.status(400).send({err:"use valid email"})
+            obj.error = "use valid email"
+            return res.status(400).json(obj)
         }
 
         let comparePass = await bcrypt.compare(password,DbPassword);
         // console.log(comparePass);
         if(!comparePass){
-            return res.status(400).send({err:"Incorrect Password"});
+            obj.error = "Incorrect Password"
+            return res.status(400).json(obj);
         }
         else{
             const uniqueData = {
@@ -53,133 +79,11 @@ exports.login = async(req,res)=>{
             }
             const token = jwt.sign(uniqueData,Secret);
             console.log("LOGGED IN");
-            res.json({token,user});
+            obj.token = token;  
+            res.json(obj);
         }
     } catch (error) {
-        res.send(error.message)
-    }
-    
-}
-
-exports.getGroup = async(req,res) =>{
-    try {
-        const grp = req.body.grp;
-        // console.log(grp);
-        const grpMembers = await User.find({group:grp});
-        res.json(grpMembers);
-    } catch (error) {
-        res.status(500).send("Internal server error");
-    }
-    
-}
-
-exports.createGroup = async (req,res) => {
-    try {
-        const userID = req.user.id;
-        const {group, groupPass} = req.body;
-
-        // * hash the grp pass
-        const salt = await bcrypt.genSalt(10);
-        const secureGrpPassword = await bcrypt.hash(groupPass,salt); 
-
-        let user = await User.findOne({_id:userID});
-        if(user.group){
-            return res.status(400).json({err:"Please leave the previous group"})
-        }
-
-        // console.log(user, secureGrpPassword);
-        User.updateOne(
-            {_id: userID,},
-            {
-                $set:{
-                    group,
-                    groupPass:secureGrpPassword,
-                    isLeader:true
-                }
-            }
-        ).then(()=>{
-            console.log("group created")
-            res.json({status: "success"})
-        }).catch((err)=>{
-            console.log(err.message);
-            res.status(400).send({err:"use valid grp password"});
-        })
-
-        // res.send({group, secureGrpPassword});
-    } catch (error) {
-        res.status(500).send("Internal server error");
-    }
-}
-
-exports.leaveGroup = async (req,res) => {
-    
-    try {
-        const userID = req.user.id;
-        User.updateOne(
-            {_id: userID,},
-            {
-                $set:{
-                    group:null,
-                    groupPass:null,
-                    isLeader:false
-                }
-            }
-        ).then(()=>{
-            console.log("group left")
-            res.json({status: "success exit"})
-        }).catch((err)=>{
-            console.log(err.message);
-            res.status(400).send({err:"could not leave"});
-        })
-    } catch (error) {
-        res.status(500).send("Internal server error");
-    }
-}
-
-
-exports.joinGroup = async (req, res) => {
-    try {
-        const grpToJoin = req.body.group.toLowerCase();
-        const userID = req.user.id;
-        const password = req.body.groupPass;
-
-        let userLead = await User.findOne(
-            {
-                "group":grpToJoin, 
-                "isLeader":true
-            }
-        );
-
-        if(!userLead){
-            return res.status(400).send({err:"invalid group creds"});
-        }
-
-        // * chk if already a member of any other group
-        let user = await User.findOne({_id:userID});
-        if(user.group){
-            return res.status(400).json({err:"Please leave the previous group"})
-        }
-        
-        let DbPassword = userLead.groupPass;
-        let comparePass = await bcrypt.compare(password,DbPassword);
-
-        if(!comparePass){
-            return res.status(400).send({err:"Incorrect Password"});
-        }
-
-        User.updateOne({_id:userID},
-        {
-            $set: {
-                group:grpToJoin
-            }
-        }).then(()=>{
-            console.log("group joined")
-            res.json({status: "updated"})
-        }).catch((err)=>{
-            res.status(400).send({err:"use valid grp password"});
-            console.log(err.message);
-        })
-    } catch (error) {
-        res.status(500).send("Internal server error");
+        obj.error = "Internal server error"
+        res.json(obj)
     }
 }
