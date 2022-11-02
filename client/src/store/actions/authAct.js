@@ -39,6 +39,7 @@ export const login = (creds) => {
         dispatch({
           type: "LOGIN_SUCCESS",
           authtoken: json.token,
+          user:json.user
         });
       } else {
         localStorage.clear();

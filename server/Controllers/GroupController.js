@@ -2,21 +2,41 @@ const User = require('../Models/user');
 const bcrypt = require('bcryptjs')
 
 exports.getGroup = async(req,res) =>{
-    try {
-        const grp = req.body.grp;
-        // console.log(grp);
-        const grpMembers = await User.find({group:grp});
-        res.json(grpMembers);
-    } catch (error) {
-        res.status(500).send("Internal server error");
+    let obj = {
+        error:null,
+        user:null,
+        grp:null
     }
-    
+    try {
+        const userID = req.user.id;
+        let user = await User.findById(userID)
+        obj.user = user;
+        const grp = user.group
+        
+        if(!grp){
+            obj.error = "Yet to join a group";
+            return res.json(obj);
+        }
+        const grpMembers = await User.find({group:grp});
+
+        obj.grp = grpMembers;
+        res.json(obj);
+
+    } catch (error) {
+        obj.error = "Internal Server Error"
+        res.status(500).json(obj);
+    }
 }
 
 exports.createGroup = async (req,res) => {
+    let obj = {
+        error:null,
+        user:null
+    }
     try {
         const userID = req.user.id;
-        const {group, groupPass} = req.body;
+        let {group, groupPass} = req.body;
+        group = group.toLowerCase();
 
         // * hash the grp pass
         const salt = await bcrypt.genSalt(10);
@@ -24,9 +44,16 @@ exports.createGroup = async (req,res) => {
 
         let user = await User.findOne({_id:userID});
         if(user.group){
-            return res.status(400).json({err:"Please leave the previous group"})
+            obj.error = "Please leave the previous group"
+            return res.status(400).json(obj);
         }
 
+        let exists = await User.findOne({group})
+        if(exists){
+            obj.error = "group name taken";
+            return res.status(400).json(obj);
+        }
+        
         // console.log(user, secureGrpPassword);
         User.updateOne(
             {_id: userID,},
@@ -37,22 +64,29 @@ exports.createGroup = async (req,res) => {
                     isLeader:true
                 }
             }
-        ).then(()=>{
+        ).then(async ()=>{
             console.log("group created")
-            res.json({status: "success"})
+            user = await User.findOne({_id:userID});
+            obj.user = user;
+            res.json(obj)
         }).catch((err)=>{
             console.log(err.message);
-            res.status(400).send({err:"use valid grp password"});
+            obj.error = "use valid grp password"
+            res.status(400).json(obj);
         })
 
         // res.send({group, secureGrpPassword});
     } catch (error) {
-        res.status(500).send("Internal server error");
+        obj.error = "Internal server error"
+        res.status(500).json(obj);
     }
 }
 
 exports.leaveGroup = async (req,res) => {
-    
+    let obj = {
+        error:null,
+        user:null
+    }
     try {
         const userID = req.user.id;
         User.updateOne(
@@ -64,20 +98,28 @@ exports.leaveGroup = async (req,res) => {
                     isLeader:false
                 }
             }
-        ).then(()=>{
+        ).then(async ()=>{
             console.log("group left")
-            res.json({status: "success exit"})
+            let user = await User.findOne({_id:userID});
+            obj.user = user;
+            res.json(obj)
         }).catch((err)=>{
             console.log(err.message);
-            res.status(400).send({err:"could not leave"});
+            obj.error = err.message
+            res.status(400).json(obj);
         })
     } catch (error) {
-        res.status(500).send("Internal server error");
+        obj.error = "Internal Server error"
+        res.status(500).json(obj);
     }
 }
 
 
 exports.joinGroup = async (req, res) => {
+    let obj = {
+        error:null,
+        user:null
+    }
     try {
         const grpToJoin = req.body.group.toLowerCase();
         const userID = req.user.id;
@@ -91,20 +133,23 @@ exports.joinGroup = async (req, res) => {
         );
 
         if(!userLead){
-            return res.status(400).send({err:"invalid group creds"});
+            obj.error = "invalid group creds"
+            return res.status(400).json(obj);
         }
 
         // * chk if already a member of any other group
         let user = await User.findOne({_id:userID});
         if(user.group){
-            return res.status(400).json({err:"Please leave the previous group"})
+            obj.error = "Please leave the previous group"
+            return res.status(400).json(obj);
         }
         
         let DbPassword = userLead.groupPass;
         let comparePass = await bcrypt.compare(password,DbPassword);
 
         if(!comparePass){
-            return res.status(400).send({err:"Incorrect Password"});
+            obj.error = "invalid password"
+            return res.status(400).json(obj);
         }
 
         User.updateOne({_id:userID},
@@ -112,14 +157,18 @@ exports.joinGroup = async (req, res) => {
             $set: {
                 group:grpToJoin
             }
-        }).then(()=>{
+        }).then(async ()=>{
             console.log("group joined")
-            res.json({status: "updated"})
+            user = await User.findOne({_id:userID})
+            obj.user = user;
+            res.json(obj);
         }).catch((err)=>{
-            res.status(400).send({err:"use valid grp password"});
             console.log(err.message);
+            obj.error = err.message
+            res.status(400).json(obj);
         })
     } catch (error) {
-        res.status(500).send("Internal server error");
+        obj.error = "Internal Server error"
+        res.status(500).json(obj);
     }
 }

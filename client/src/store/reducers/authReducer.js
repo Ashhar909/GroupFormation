@@ -1,6 +1,6 @@
 const initState = {
     error:null,
-    token:null
+    token:null,
 }
 
 const authReducer = (state = initState, action) => {
@@ -15,7 +15,7 @@ const authReducer = (state = initState, action) => {
             return{
                 ...state,
                 token:action.authtoken,
-                error:null
+                error:null,
             }
 
         case "LOGOUT":

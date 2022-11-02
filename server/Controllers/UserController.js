@@ -9,7 +9,7 @@ const {Secret} = require('../Middleware/FetchUser')
 exports.createUser = async (req,res) => {
     let obj = {
         token:null,
-        error:null
+        error:null,
     }
 
     // create encrypted password
@@ -54,7 +54,7 @@ exports.createUser = async (req,res) => {
 exports.login = async(req,res)=>{
     let obj = {
         token:null,
-        error:null
+        error:null,
     }
 
     try {
@@ -77,7 +77,7 @@ exports.login = async(req,res)=>{
             const uniqueData = {
                 id:user._id
             }
-            const token = jwt.sign(uniqueData,Secret);
+            const token = jwt.sign(uniqueData,process.env.SECRET);
             console.log("LOGGED IN");
             obj.token = token;  
             res.json(obj);
