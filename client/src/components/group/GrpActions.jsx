@@ -19,20 +19,23 @@ const GrpActions = (props) => {
     e.preventDefault();
     await props.create(creds, props.auth.token)
     if(localStorage.getItem("create-action")){
+      alert("group Created")
       Navigate('/home')
     }
     else{
-      alert("Group Not Created")
+      alert(localStorage.getItem("grp-error"))
     }
   }
+
   const handleJoin = async (e) => {
     e.preventDefault();
     await props.join(creds, props.auth.token)
     if(localStorage.getItem("join-action")){
+      alert("group Joined")
       Navigate('/home')
     }
     else{
-      alert("Group Not Joined")
+      alert(localStorage.getItem("grp-error"))
     }
   }
   return (

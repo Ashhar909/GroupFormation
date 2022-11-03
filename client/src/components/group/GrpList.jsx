@@ -1,10 +1,14 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { leaveGroup } from "../../store/actions/groupAct";
 import Member from "./Member";
 
 const GrpList = (props) => {
+  const Navigate = useNavigate()
+
   let grplist = null;
-  if(props.grp){
+  if(props.grp.group){
     grplist = props.grp.group.map((member) => {
     return (
       <div key={member._id} className="col-md-3 my-3">
@@ -12,9 +16,23 @@ const GrpList = (props) => {
       </div>
     )
   })}
+
   useEffect(() => {
     console.log(props.grp)
   }, [])
+
+  const handleLeave = async(e) => {
+    e.preventDefault();
+    await props.leave(props.auth.token)
+
+    if(!localStorage.getItem('create-action')){
+      alert("group Left");
+      Navigate('/home')
+    }
+    else{
+      alert(localStorage.getItem("grp-error"))
+    }
+  }
 
   return (
     <div className="container">
@@ -39,7 +57,7 @@ const GrpList = (props) => {
             marginLeft:"120px",
             width: "82%",
           }}>
-            <button className="btn btn-primary mx-3" >LeaveGroup</button>
+            <button className="btn btn-primary mx-3" onClick={handleLeave}>LeaveGroup</button>
           </div>
     </div>
   );
@@ -47,8 +65,15 @@ const GrpList = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    grp: state.grp
+    grp: state.grp,
+    auth: state.auth
   };
 };
 
-export default connect(mapStateToProps)(GrpList);
+const mapDispatchToprops = (dispatch) => {
+  return {
+    leave : (token) => (dispatch(leaveGroup(token)))
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToprops)(GrpList);

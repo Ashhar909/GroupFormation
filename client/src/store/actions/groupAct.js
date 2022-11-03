@@ -20,6 +20,7 @@ export const getGroup = (token) => {
         })
       }
       else{
+        localStorage.setItem('grp-error', json.error);
         dispatch({
           type: 'GRP_ERROR',
           error:json.error
@@ -51,6 +52,7 @@ export const createGroup = (creds, token) => {
       })
     }
     else{
+      localStorage.setItem('grp-error', json.error);
       dispatch({
         type: 'GRP_ERROR',
         error:json.error
@@ -83,6 +85,7 @@ export const joinGroup = (creds, token) => {
       })
     }
     else{
+      localStorage.setItem('grp-error', json.error);
       dispatch({
         type: 'GRP_ERROR',
         error:json.error
@@ -91,8 +94,34 @@ export const joinGroup = (creds, token) => {
   }
 }
 
-export const leaveGroup = () => {
-  return({
-      type: "LEAVE"
-    })
+export const leaveGroup = (token) => {
+  return async(dispatch) => {
+    const response = await fetch(
+        "http://localhost:3003/leavegroup",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "auth-token": token
+          },
+        }
+      ); 
+      const json = await response.json();
+      console.log(json);
+      if(!json.error){
+        localStorage.removeItem('create-action')
+        localStorage.removeItem('join-action')
+        dispatch({
+          type: 'LEAVE',
+          user: json.user,
+        })
+      }
+      else{
+        localStorage.setItem('grp-error', json.error);
+        dispatch({
+          type: 'GRP_ERROR',
+          error:json.error
+        })
+      }
+    }
 }

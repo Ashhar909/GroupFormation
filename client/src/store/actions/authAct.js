@@ -10,12 +10,13 @@ export const login = (creds) => {
       const json = await response.json();
       if (!json.error) {
         localStorage.setItem('token', json.token);
+        localStorage.setItem('name', json.name);
         dispatch({
           type: "LOGIN_SUCCESS",
           authtoken: json.token,
         });
       } else {
-        localStorage.clear();
+        localStorage.setItem('auth-error', json.error);
         dispatch({
           type: "LOGIN_ERROR",
           err: json.error,
@@ -36,13 +37,14 @@ export const login = (creds) => {
       const json = await response.json();
       if (!json.error) {
         localStorage.setItem('token', json.token);
+        localStorage.setItem('name', json.name);
         dispatch({
           type: "LOGIN_SUCCESS",
           authtoken: json.token,
           user:json.user
         });
       } else {
-        localStorage.clear();
+        localStorage.setItem('auth-error', json.error);
         dispatch({
           type: "LOGIN_ERROR",
           err: json.error,

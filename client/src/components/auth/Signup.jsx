@@ -25,7 +25,7 @@ const Signup = (props) => {
       alert("Signed up succesfully", "success");
       Navigate("/home");
     } else {
-      alert("Enter Valid Credentials", "danger");
+      alert(localStorage.getItem("auth-error"));
     }
   };
   return (

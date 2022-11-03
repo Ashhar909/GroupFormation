@@ -33,7 +33,8 @@ const groupReducer = (state = initState, action) => {
         case 'GRP_ERROR':
             return {
                 ...state,
-                error: action.error
+                error: action.error,
+                group:null
             }
         default:
             return state
