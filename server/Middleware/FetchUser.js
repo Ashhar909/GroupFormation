@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const Secret = "Ash$Ash"
+// const Secret = "Ash$Ash"
 
 const FetchUser = (req,res,next)=>{
     const token = req.header("auth-token");
@@ -18,4 +18,4 @@ const FetchUser = (req,res,next)=>{
     }
 }
 
-module.exports = {Secret, FetchUser};
+module.exports = { FetchUser};

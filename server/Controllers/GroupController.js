@@ -43,11 +43,7 @@ exports.createGroup = async (req,res) => {
         const secureGrpPassword = await bcrypt.hash(groupPass,salt); 
 
         let user = await User.findOne({_id:userID});
-        if(user.group){
-            obj.error = "Please leave the previous group"
-            return res.status(400).json(obj);
-        }
-
+        
         let exists = await User.findOne({group})
         if(exists){
             obj.error = "group name taken";
@@ -137,12 +133,7 @@ exports.joinGroup = async (req, res) => {
             return res.status(400).json(obj);
         }
 
-        // * chk if already a member of any other group
         let user = await User.findOne({_id:userID});
-        if(user.group){
-            obj.error = "Please leave the previous group"
-            return res.status(400).json(obj);
-        }
         
         let DbPassword = userLead.groupPass;
         let comparePass = await bcrypt.compare(password,DbPassword);

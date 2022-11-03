@@ -3,13 +3,13 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 // TODO move secret and port to env file
-const {Secret} = require('../Middleware/FetchUser')
-
+// const {Secret} = require('../Middleware/FetchUser')
 
 exports.createUser = async (req,res) => {
     let obj = {
         token:null,
         error:null,
+        name:null
     }
 
     // create encrypted password
@@ -36,8 +36,9 @@ exports.createUser = async (req,res) => {
             const uniqueData = {
                 id:user._id
             }
-            const token = jwt.sign(uniqueData,Secret);
+            const token = jwt.sign(uniqueData,process.env.SECRET);
             console.log("Saved");
+            obj.name = name;
             obj.token = token;
             res.json(obj);
         })
@@ -55,6 +56,7 @@ exports.login = async(req,res)=>{
     let obj = {
         token:null,
         error:null,
+        name:null
     }
 
     try {
@@ -80,6 +82,7 @@ exports.login = async(req,res)=>{
             const token = jwt.sign(uniqueData,process.env.SECRET);
             console.log("LOGGED IN");
             obj.token = token;  
+            obj.name = user.name
             res.json(obj);
         }
     } catch (error) {
