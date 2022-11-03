@@ -7,7 +7,7 @@ const GroupPage = (props) => {
   return (
     <div>
     {
-        props.grp.group? <GrpList/> : <GrpActions/> 
+      props.grp.group? <GrpList/> : <GrpActions/> 
     }
     </div>
   )

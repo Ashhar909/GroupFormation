@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import { createUser } from "../../store/actions/authAct";
 import { Link, useNavigate } from "react-router-dom";
+import { showAlert } from "../../store/actions/alertAct";
 
 const Signup = (props) => {
   let Navigate = useNavigate();
@@ -22,10 +23,10 @@ const Signup = (props) => {
     e.preventDefault();
     await props.createAccount(creds);
     if (localStorage.getItem("token")) {
-      alert("Signed up succesfully", "success");
+      props.showAlert("Signed up succesfully", "success");
       Navigate("/home");
     } else {
-      alert(localStorage.getItem("auth-error"));
+      props.showAlert(localStorage.getItem("auth-error"),"danger");
     }
   };
   return (
@@ -81,6 +82,7 @@ const Signup = (props) => {
 const mapDispatchToprops = (dispatch) => {
   return {
     createAccount: (creds) => dispatch(createUser(creds)),
+    showAlert: (msg, status) => dispatch(showAlert(msg,status))
   };
 };
 

@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { showAlert } from "../../store/actions/alertAct";
 import { leaveGroup } from "../../store/actions/groupAct";
 import Member from "./Member";
 
@@ -17,20 +18,16 @@ const GrpList = (props) => {
     )
   })}
 
-  useEffect(() => {
-    console.log(props.grp)
-  }, [])
-
   const handleLeave = async(e) => {
     e.preventDefault();
     await props.leave(props.auth.token)
 
     if(!localStorage.getItem('create-action')){
-      alert("group Left");
+      props.showAlert("group Left", "success");
       Navigate('/home')
     }
     else{
-      alert(localStorage.getItem("grp-error"))
+      props.showAlert(localStorage.getItem("grp-error"), "warning")
     }
   }
 
@@ -72,7 +69,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToprops = (dispatch) => {
   return {
-    leave : (token) => (dispatch(leaveGroup(token)))
+    leave : (token) => (dispatch(leaveGroup(token))),
+    showAlert: (msg, status) => dispatch(showAlert(msg,status))
   }
 }
 

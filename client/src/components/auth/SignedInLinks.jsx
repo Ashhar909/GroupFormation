@@ -2,12 +2,13 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { logout } from "../../store/actions/authAct";
+import { showAlert } from "../../store/actions/alertAct";
 
 const SignedInLinks = (props) => {
   const Navigate = useNavigate();
   const handleClick = () => {
     props.logout();
-    alert("Signed Out succesfully");
+    props.showAlert("Signed Out succesfully", "success");
     Navigate("/");
   };
   return (
@@ -60,6 +61,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToprops = (dispatch) => {
   return {
     logout: () => dispatch(logout()),
+    showAlert: (msg, status) => dispatch(showAlert(msg,status))
   };
 };
 

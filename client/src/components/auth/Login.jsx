@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import { login } from "../../store/actions/authAct";
 import { Link, useNavigate } from "react-router-dom";
+import { showAlert } from "../../store/actions/alertAct";
 
 const Login = (props) => {
   let Navigate = useNavigate();
@@ -18,10 +19,10 @@ const Login = (props) => {
     e.preventDefault();
     await props.authenticate(creds);
     if (localStorage.getItem("token")) {
-      alert("Logged In succesfully", "success");
+      props.showAlert("Logged In succesfully", "success");
       Navigate("/home");
     } else {
-      alert(localStorage.getItem("auth-error"));
+      props.showAlert(localStorage.getItem("auth-error"),"danger");
     }
   };
   return (
@@ -73,6 +74,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToprops = (dispatch) => {
   return {
     authenticate: (creds) => dispatch(login(creds)),
+    showAlert: (msg, status) => dispatch(showAlert(msg,status))
   };
 };
 

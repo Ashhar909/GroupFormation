@@ -6,12 +6,14 @@ import SignUp from './components/auth/Signup'
 import Navbar from './components/other/Navbar'
 import Home from './components/other/Home'
 import GroupPage from './components/group/GroupPage'
+import Alert from './components/other/Alert'
 
 
 function App() {
   return (
     <Router>
       <Navbar/>
+      <Alert/>
       <div className="App">
             <Routes>
               <Route exact path="/" element={<Login />} />

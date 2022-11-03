@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createGroup, joinGroup } from '../../store/actions/groupAct';
+import { showAlert } from '../../store/actions/alertAct'
 
 const GrpActions = (props) => {
   
@@ -19,11 +20,11 @@ const GrpActions = (props) => {
     e.preventDefault();
     await props.create(creds, props.auth.token)
     if(localStorage.getItem("create-action")){
-      alert("group Created")
+      props.showAlert("group Created", "success")
       Navigate('/home')
     }
     else{
-      alert(localStorage.getItem("grp-error"))
+      props.showAlert(localStorage.getItem("grp-error"), "warning")
     }
   }
 
@@ -31,11 +32,11 @@ const GrpActions = (props) => {
     e.preventDefault();
     await props.join(creds, props.auth.token)
     if(localStorage.getItem("join-action")){
-      alert("group Joined")
+      props.showAlert("group Joined","success")
       Navigate('/home')
     }
     else{
-      alert(localStorage.getItem("grp-error"))
+      props.showAlert(localStorage.getItem("grp-error"),"warning")
     }
   }
   return (
@@ -104,6 +105,7 @@ const mapDispatchToprops = (dispatch) => {
   return {
     create: (creds,token) => dispatch(createGroup(creds,token)),
     join: (creds,token) => dispatch(joinGroup(creds,token)),
+    showAlert: (msg, status) => dispatch(showAlert(msg,status))
   };
 };
 
