@@ -6,6 +6,7 @@ const Home = (props) => {
   useEffect(() => {
     // console.log(props)
     props.getAll(props.auth.token);
+    // eslint-disable-next-line
   }, [])
   
   return (
