@@ -25,6 +25,10 @@ const userSchema = new mongoose.Schema({
     isLeader:{
         type:Boolean,
         default:false
+    },
+    isMentor:{
+        type : Boolean,
+        default: false
     }
 },{timestamps:true})
 

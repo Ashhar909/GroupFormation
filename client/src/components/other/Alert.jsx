@@ -1,7 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
-function Alert(props) {
+function AlertComponent(props) {
     const capitalize = (word)=>{
         if(word === "danger") {
             word = "error"
@@ -12,9 +14,13 @@ function Alert(props) {
     return (
       <div className='d-flex justify-content-center'>
         <div style={{height: '50px', width:"40%"}}>
-        {props.alert.status && <div className={`alert alert-${props.alert.status} alert-dismissible fade show`} role="alert">
+        {/* {props.alert.status && <div className={`alert alert-${props.alert.status} alert-dismissible fade show`} role="alert">
            <strong>{capitalize(props.alert.status)}</strong>: {props.alert.msg} 
-        </div>}
+        </div>} */}
+        {props.alert.status && <Alert severity={props.alert.status} style={{borderRadius:"0px 0px 20px 20px"}}>
+        <AlertTitle>{capitalize(props.alert.status)}</AlertTitle>
+        <strong>{props.alert.msg}</strong>
+        </Alert>}
         </div>
       </div>
     )
@@ -26,4 +32,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(Alert);
+export default connect(mapStateToProps)(AlertComponent);
