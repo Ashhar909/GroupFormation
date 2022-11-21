@@ -11,21 +11,34 @@ import Paper from '@mui/material/Paper';
 import { connect } from 'react-redux';
 import { getmentors } from '../../store/actions/mentorAct';
 
-function createData(name, Specialised, division) {
-  return { name, Specialised, division};
+function createData(name, email, division) {
+  return { name, email, division};
 }
 
 
 const Mentors = (props) => {
     useEffect(() => {
       console.log(props)
+      props.getmentors(props.auth.token)
+      .then(()=>{
+        console.log("mentors fetched")
+      }).catch((err) => {
+        console.log(err.message)
+      })
       // eslint-disable-next-line
     }, [])
 
+    // const rows = [
+    //   createData('Millind Patwardhan', 'Problem Solving', 'S'),
+    //   createData('Vrinda Parkhi', 'Power Electronics', 'T'),
+    //   createData('Mrunal Shidore', 'Hardware', 'A'),
+    // ];
     const rows = [
-      createData('Millind Patwardhan', 'Problem Solving', 'S'),
-      createData('Vrinda Parkhi', 'Power Electronics', 'T'),
-      createData('Mrunal Shidore', 'Hardware', 'A'),
+      props.mentors.mentors.map((mentor)=> {
+        return(
+        createData(mentor.name, mentor.email, mentor._id)
+        )
+      })
     ];
     
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -54,7 +67,7 @@ const Mentors = (props) => {
         <TableHead>
           <StyledTableRow>
             <StyledTableCell>Mentor's Name</StyledTableCell>
-            <StyledTableCell align="center">Specialised In</StyledTableCell>
+            <StyledTableCell align="center">Email</StyledTableCell>
             <StyledTableCell align="center">Division</StyledTableCell>
             <StyledTableCell align="center">Add Mentor</StyledTableCell>
           </StyledTableRow>
@@ -68,7 +81,7 @@ const Mentors = (props) => {
               <StyledTableCell component="th" scope="row">
                 {row.name}
               </StyledTableCell>
-              <StyledTableCell align="center">{row.Specialised}</StyledTableCell>
+              <StyledTableCell align="center">{row.email}</StyledTableCell>
               <StyledTableCell align="center">{row.division}</StyledTableCell>
               <StyledTableCell align="center"><PersonAddIcon/></StyledTableCell>
             </StyledTableRow>

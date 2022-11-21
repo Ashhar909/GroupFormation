@@ -8,9 +8,8 @@ exports.getMentors = async (req, res) => {
     }
     try {
         User.find({"isMentor":true})
-        .then((res)=> {
-            // console.log(res)
-            obj.mentors = res
+        .then((response)=> {
+            obj.mentors = response
             res.json(obj)
         }).catch((error) => {
             obj.error = error.message
