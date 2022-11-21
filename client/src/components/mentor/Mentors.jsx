@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React ,{ useEffect } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
@@ -8,18 +8,26 @@ import { styled } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { connect } from 'react-redux';
+import { getmentors } from '../../store/actions/mentorAct';
 
 function createData(name, Specialised, division) {
   return { name, Specialised, division};
 }
 
-const rows = [
-  createData('Millind Patwardhan', 'Problem Solving', 'S'),
-  createData('Vrinda Parkhi', 'Power Electronics', 'T'),
-  createData('Mrunal Shidore', 'Hardware', 'A'),
-];
 
-export default function Mentors() {
+const Mentors = (props) => {
+    useEffect(() => {
+      console.log(props)
+      // eslint-disable-next-line
+    }, [])
+
+    const rows = [
+      createData('Millind Patwardhan', 'Problem Solving', 'S'),
+      createData('Vrinda Parkhi', 'Power Electronics', 'T'),
+      createData('Mrunal Shidore', 'Hardware', 'A'),
+    ];
+    
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
           backgroundColor: theme.palette.common.black,
@@ -71,3 +79,18 @@ export default function Mentors() {
     </div>
   );
 }
+
+const mapStateToProps = (state) => {
+  return{
+    mentors:state.mentor,
+    auth: state.auth,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return{
+    getmentors : (token) => dispatch(getmentors(token))
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Mentors);
