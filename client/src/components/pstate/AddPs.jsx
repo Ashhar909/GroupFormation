@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { createPs } from "../../store/actions/psAct";
 
 const AddPs = (props) => {
+  const navigate = useNavigate()
     const [creds, setCreds] = useState({
         ps:"",
         domain:"",
@@ -22,6 +24,7 @@ const AddPs = (props) => {
         e.preventDefault()
         console.log(creds, props.auth.token)
         props.addProb(creds, props.auth.token);
+        navigate('/home');
     }
   return (
     <div>

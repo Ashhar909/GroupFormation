@@ -12,7 +12,7 @@ const AllPs = (props) => {
 
     let psList = props.ps ? props.ps.ps.map((prob) => {
         return(
-            <div key={prob._id} className='container d-flex justify-content-end'>
+            <div key={prob._id} className='container'>
                 <PsComponent problem={prob}/>
             </div>
         )
@@ -23,10 +23,14 @@ const AllPs = (props) => {
   return (
     <div className='container'>
         <h2 style={{borderBottom:"2px solid black"}}>Problem Statements</h2>
-        <div className='container' style={{textAlign:"center"}}>
-            <Link style={{width:"38%"}} type="button" class="btn btn-dark" to='/add-ps'>Add Ps</Link>
+    <div className='container row'>
+        <div className='col-10'>
+            {props.ps? psList : <div>Loading...</div>}
         </div>
-        {props.ps? psList : <div>Loading...</div>}
+        <div className='container col-2 my-3' style={{textAlign:"center"}}>
+            <Link style={{width:"100%"}} type="button" class="btn btn-dark" to='/add-ps'>Add Ps</Link>
+        </div>
+    </div>
     </div>
   )
 }
