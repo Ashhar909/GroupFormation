@@ -14,6 +14,7 @@ const Signup = (props) => {
     name: "",
     email: "",
     password: "",
+    division:"",
     isMentor: false
   });
 
@@ -46,14 +47,14 @@ const Signup = (props) => {
       <form onSubmit={handleSubmit}>
         <h3>Sign Up</h3>
         <div className="mb-3">
-          <label>First name</label>
+          <label>Name</label>
           <input
             type="text"
             name="name"
             value={creds.name}
             onChange={handleChange}
             className="form-control"
-            placeholder="First name"
+            placeholder="Name"
           />
         </div>
         <div className="mb-3">
@@ -65,6 +66,17 @@ const Signup = (props) => {
             onChange={handleChange}
             className="form-control"
             placeholder="Enter email"
+          />
+        </div>
+        <div className="mb-3">
+          <label>Division</label>
+          <input
+            type="text"
+            name="division"
+            value={creds.division}
+            onChange={handleChange}
+            className="form-control"
+            placeholder="Division"
           />
         </div>
         <div className="mb-3">

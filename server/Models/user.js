@@ -29,6 +29,9 @@ const userSchema = new mongoose.Schema({
     isMentor:{
         type : Boolean,
         default: false
+    },
+    division:{
+        type: String,
     }
 },{timestamps:true})
 

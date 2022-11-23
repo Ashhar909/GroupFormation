@@ -15,7 +15,7 @@ exports.createUser = async (req,res) => {
     // create encrypted password
     try {
 
-        const {email, name, password, isMentor} = req.body
+        const {email, name, password, isMentor, division} = req.body
         const exists = await User.findOne({email})
 
         if(exists){
@@ -29,7 +29,8 @@ exports.createUser = async (req,res) => {
             name,
             email,
             password:securePassword,
-            isMentor:isMentor
+            isMentor:isMentor,
+            division
         })
 
         user.save()

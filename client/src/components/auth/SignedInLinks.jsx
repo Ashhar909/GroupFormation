@@ -1,16 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { logout } from "../../store/actions/authAct";
 import { showAlert } from "../../store/actions/alertAct";
+import { searchPs } from "../../store/actions/psAct";
 
 const SignedInLinks = (props) => {
+  const [search, setSearch] = useState({
+    searchTerm:""
+  })
   const Navigate = useNavigate();
   const handleClick = () => {
     props.logout();
     props.showAlert("Signed Out succesfully", "success");
     Navigate("/");
   };
+
+  const handleChange = (e) => {
+    setSearch({...search,
+      [e.target.name]:e.target.value
+    })
+  }
+
+  const handleSearch = (e) => {
+    e.preventDefault()
+    // console.log(props)
+    props.search(search)
+  }
   return (
     <div>
       <div className="collapse navbar-collapse " id="navbarSupportedContent">
@@ -22,9 +38,14 @@ const SignedInLinks = (props) => {
             </Link>
           </div>
           <div className="nav-item">
-            <Link className="nav-link" to="/group">
+            <Link className="nav-link active" to="/group">
               <h4>Group</h4>
             </Link>
+          </div>
+          <div class="col-md-3 text-end mx-3 my-1">
+            <form onSubmit={handleSearch}>
+                <input type="search" name="searchTerm" class="form-control" placeholder="Search..." aria-label="Search" value={search.searchTerm} onChange={handleChange} style={{width: "150px"}}/>
+            </form>
           </div>
         </div>
 
@@ -37,7 +58,7 @@ const SignedInLinks = (props) => {
               height: "40px",
               textAlign: "center",
               paddingTop: "5px",
-              marginLeft:"780px"
+              marginLeft:"550px"
             }}
           >
             {localStorage.getItem("name").slice(0, 1).toUpperCase()}
@@ -61,7 +82,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToprops = (dispatch) => {
   return {
     logout: () => dispatch(logout()),
-    showAlert: (msg, status) => dispatch(showAlert(msg,status))
+    showAlert: (msg, status) => dispatch(showAlert(msg,status)),
+    search: (search) => dispatch(searchPs(search))
   };
 };
 

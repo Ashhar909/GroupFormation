@@ -7,6 +7,9 @@ import Navbar from './components/other/Navbar'
 import Home from './components/other/Home'
 import GroupPage from './components/group/GroupPage'
 import Alert from './components/other/Alert'
+import AddPs from './components/pstate/AddPs'
+import AllPs from './components/pstate/AllPs'
+import PsDetails from './components/pstate/PsDetails'
 
 
 function App() {
@@ -21,6 +24,9 @@ function App() {
               <Route path="/group" element={<GroupPage />} />
               <Route path="/sign-in" element={<Login />} />
               <Route path="/sign-up" element={<SignUp />} />
+              <Route path="/add-ps" element={<AddPs />} />
+              <Route path="/all-ps" element={<AllPs />} />
+              <Route path="/ps/:id" element={<PsDetails />} />
             </Routes>
       </div>
     </Router>
