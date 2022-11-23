@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom'
 const PsComponent = (props) => {
     const ps = props.problem
   return (
-    <div className='col-8 container my-3'>
-        <Link to={`/ps/${ps._id}`} className="col text-dark" style={{textDecoration:"none"}}>
+    <div className='container my-3' style={{width:"50%"}}>
+        <Link to={`/ps/${ps._id}`} className="text-dark" style={{textDecoration:"none"}}>
         <div class="card">
   <div class="card-header">
   <h5 className="card-title p-2">Team Name: {ps.TeamName}</h5>

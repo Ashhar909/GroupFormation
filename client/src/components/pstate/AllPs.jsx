@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { getPs } from '../../store/actions/psAct'
 import PsComponent from './PsComponent'
 
@@ -11,7 +12,7 @@ const AllPs = (props) => {
 
     let psList = props.ps ? props.ps.ps.map((prob) => {
         return(
-            <div key={prob._id} className='container display-flex'>
+            <div key={prob._id} className='container d-flex justify-content-end'>
                 <PsComponent problem={prob}/>
             </div>
         )
@@ -20,7 +21,11 @@ const AllPs = (props) => {
     // let psList = null
     
   return (
-    <div>
+    <div className='container'>
+        <h2 style={{borderBottom:"2px solid black"}}>Problem Statements</h2>
+        <div className='container' style={{textAlign:"center"}}>
+            <Link style={{width:"38%"}} type="button" class="btn btn-dark" to='/add-ps'>Add Ps</Link>
+        </div>
         {props.ps? psList : <div>Loading...</div>}
     </div>
   )
