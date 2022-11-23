@@ -1,12 +1,12 @@
-export const createPs = (creds) => {
+export const createPs = (creds,token) => {
     return async(dispatch) => {
     const response = await fetch(
-        "http://localhost:3006/addPS",
+        "http://localhost:3003/addPS",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            // "auth-token": token
+            "auth-token": token
           },
           body: JSON.stringify(creds)
         }
@@ -28,15 +28,15 @@ export const createPs = (creds) => {
     }
 }
 
-export const getPs = () => {
+export const getPs = (token) => {
   return async(dispatch) => {
   const response = await fetch(
-      "http://localhost:3006/ps",
+      "http://localhost:3003/ps",
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          // "auth-token": token
+          "auth-token": token
         }
       }
     ); 
@@ -49,15 +49,15 @@ export const getPs = () => {
   }
 }
 
-export const searchPs = (creds) => {
+export const searchPs = (creds, token) => {
   return async(dispatch) => {
   const response = await fetch(
-      "http://localhost:3006/search",
+      "http://localhost:3003/search",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // "auth-token": token
+          "auth-token": token
         },
         body: JSON.stringify(creds)
       }

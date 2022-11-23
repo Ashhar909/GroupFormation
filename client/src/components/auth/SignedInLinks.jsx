@@ -25,7 +25,7 @@ const SignedInLinks = (props) => {
   const handleSearch = (e) => {
     e.preventDefault()
     // console.log(props)
-    props.search(search)
+    props.search(search, props.auth.token)
   }
   return (
     <div>
@@ -40,6 +40,16 @@ const SignedInLinks = (props) => {
           <div className="nav-item">
             <Link className="nav-link active" to="/group">
               <h4>Group</h4>
+            </Link>
+          </div>
+          <div className="nav-item">
+            <Link className="nav-link active" to="/all-ps">
+              <h4>Statments</h4>
+            </Link>
+          </div>
+          <div className="nav-item">
+            <Link className="nav-link active" to="/group">
+              <h4>Project</h4>
             </Link>
           </div>
           <div class="col-md-3 text-end mx-3 my-1">
@@ -58,7 +68,7 @@ const SignedInLinks = (props) => {
               height: "40px",
               textAlign: "center",
               paddingTop: "5px",
-              marginLeft:"550px"
+              marginLeft:"400px"
             }}
           >
             {localStorage.getItem("name").slice(0, 1).toUpperCase()}
@@ -83,7 +93,7 @@ const mapDispatchToprops = (dispatch) => {
   return {
     logout: () => dispatch(logout()),
     showAlert: (msg, status) => dispatch(showAlert(msg,status)),
-    search: (search) => dispatch(searchPs(search))
+    search: (search, token) => dispatch(searchPs(search, token))
   };
 };
 

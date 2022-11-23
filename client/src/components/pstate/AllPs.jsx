@@ -11,7 +11,7 @@ const AllPs = (props) => {
 
     let psList = props.ps ? props.ps.ps.map((prob) => {
         return(
-            <div key={prob._id} className='container'>
+            <div key={prob._id} className='container display-flex'>
                 <PsComponent problem={prob}/>
             </div>
         )

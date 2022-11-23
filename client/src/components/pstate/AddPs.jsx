@@ -20,8 +20,8 @@ const AddPs = (props) => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        console.log(creds)
-        props.addProb(creds);
+        console.log(creds, props.auth.token)
+        props.addProb(creds, props.auth.token);
     }
   return (
     <div>
@@ -161,7 +161,7 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
     return{
-        addProb: (creds) => dispatch(createPs(creds))
+        addProb: (creds, token) => dispatch(createPs(creds, token))
     }
 }
 
