@@ -25,6 +25,12 @@ const psReducer = (state = initState, action) => {
                 ...state,
                 ps:action.psStatment
             }
+        case 'LOGOUT':
+            return{
+                ...state,
+                error:null,
+                ps:null
+            }
         default:
             return state
     }

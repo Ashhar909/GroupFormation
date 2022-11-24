@@ -6,7 +6,7 @@ import Mentors from '../mentor/Mentors'
 
 const GroupPage = (props) => {
   useEffect(() => {
-    console.log(props.user)
+    // console.log("user: ",props.user)
     // eslint-disable-next-line
   }, [])
   
@@ -17,7 +17,7 @@ const GroupPage = (props) => {
       props.grp.group? <GrpList/> : <GrpActions/> 
     }
     {
-      props.user.isLeader? <Mentors/> : null
+      props.user && props.user.isLeader ? <Mentors/> : null
     }
     </div>
   )

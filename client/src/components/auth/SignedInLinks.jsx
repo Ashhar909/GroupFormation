@@ -52,9 +52,9 @@ const SignedInLinks = (props) => {
               <h4>Project</h4>
             </Link>
           </div>
-          <div class="col-md-3 text-end mx-3 my-1">
+          <div className="col-md-3 text-end mx-3 my-1">
             <form onSubmit={handleSearch}>
-                <input type="search" name="searchTerm" class="form-control" placeholder="Search..." aria-label="Search" value={search.searchTerm} onChange={handleChange} style={{width: "150px"}}/>
+                <input type="search" name="searchTerm" className="form-control" placeholder="Search..." aria-label="Search" value={search.searchTerm} onChange={handleChange} style={{width: "150px"}}/>
             </form>
           </div>
         </div>

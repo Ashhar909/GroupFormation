@@ -36,6 +36,13 @@ const groupReducer = (state = initState, action) => {
                 error: action.error,
                 group:null
             }
+        case 'LOGOUT':
+            return{
+                ...state,
+                error:null,
+                group:null,
+                user:null
+            }
         default:
             return state
     }

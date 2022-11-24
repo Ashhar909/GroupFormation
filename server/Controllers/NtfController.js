@@ -21,4 +21,17 @@ exports.getMentors = async (req, res) => {
     }
 }
 
-// exports.requestMentor = async
+exports.requestMentor = (req,res) => {
+    let obj = {
+        mentors:null,
+        error:null,
+    }
+    try {
+        const request = new Notification({
+            
+        })
+    } catch (error) {
+        obj.error = "Internal Server Error"
+        res.json(obj)
+    }
+}

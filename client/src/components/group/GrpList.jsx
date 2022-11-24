@@ -33,10 +33,7 @@ const GrpList = (props) => {
 
   return (
     <div className="container">
-      <div className="row" style={{
-            marginLeft:"120px",
-            width: "82%",
-          }}>
+      <div className="row" >
         <h2
           className="my-5"
           style={{
@@ -50,11 +47,8 @@ const GrpList = (props) => {
 
 
       </div>
-          <div className="grpBut" style={{
-            marginLeft:"120px",
-            width: "82%",
-          }}>
-            <button className="btn btn-primary mx-3" onClick={handleLeave}>LeaveGroup</button>
+          <div className="d-flex justify-content-center" >
+            <button className="btn btn-primary mx-3" style={{width:"20%"}} onClick={handleLeave}>LeaveGroup</button>
           </div>
     </div>
   );
